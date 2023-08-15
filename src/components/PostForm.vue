@@ -33,9 +33,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 form {
     display: flex;
     flex-direction: column;
+    .input {
+        border: 1px solid #38ac5a;
+        border-radius: 4px;
+        height: 40px;
+        padding: 10px;
+        margin: 10px;
+    }
 }
 </style>

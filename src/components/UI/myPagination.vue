@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div class="paginator-container">
+        <my-btn :disabled="pageCountFrom === 0" @click="previousPages">-</my-btn>
         <ul class="paginator">
-            <li v-for="page in cutPageAmount" :key="page">
+            <li v-for="page in cutPageAmount()" :key="page">
                 <button
                     @click="changePage(page)"
                     class="paginator__item"
@@ -12,13 +13,16 @@
                 </button>
             </li>
         </ul>
-        <button v-if="pageCountFrom >= 5" @click="previousPages">-</button>
-        <button v-else-if="pageCountTo <= totalPages" @click="nextPages">+</button>
+        <my-btn :disabled="pageCountTo >= totalPages" @click="nextPages">+</my-btn>
     </div>
 </template>
 
 <script>
+import myBtn from './myBtn.vue'
 export default {
+    components: {
+        myBtn,
+    },
     name: 'my-pagination',
     props: {
         totalPages: {
@@ -61,13 +65,24 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .paginator {
     list-style-type: none;
     display: flex;
-    column-gap: 10px;
-    margin: 10px auto;
-    width: 20%;
+    align-items: center;
+    column-gap: 15px;
+    li {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+.paginator-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 25px;
 }
 .paginator__item {
     background: transparent;

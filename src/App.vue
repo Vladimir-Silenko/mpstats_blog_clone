@@ -1,20 +1,15 @@
 <template>
     <div class="app">
         <div class="wrapper">
-            <Header />
+            <Header :search="searchValue" @update:search="updateSearch" />
             <side-bar></side-bar>
             <main>
                 <CategoryPage />
                 <div class="post-container">
-                    <!-- <div class="app__buttons">
-                    <my-btn @click="openModal">Cоздать пост</my-btn>
-                    <my-input
-                        v-model="searchValue"
-                        class="input"
-                        placeholder="Поиск поста"
-                        type="text" />
-                    <my-select :options="sortOptions" v-model="selectedOption" />
-                </div> -->
+                    <div class="app__buttons">
+                        <my-btn @click="openModal">Cоздать пост</my-btn>
+                        <my-select class="select" :options="sortOptions" v-model="selectedOption" />
+                    </div>
                     <post-list
                         v-if="!isPostLoading"
                         :posts="sortedAndSearchedPosts"
@@ -94,7 +89,6 @@ export default {
             this.showModal = true
         },
         async fetchPosts() {
-            console.log('fetchPosts called with currentPage:', this.currentPage)
             const response = await axios.get(
                 `https://jsonplaceholder.typicode.com/posts?_limit=${this.limit}&_page=${this.currentPage}`,
             )
@@ -111,7 +105,10 @@ export default {
         },
         handleScroll() {
             this.isScrolled = window.scrollY > 0
-            console.log('work')
+        },
+        updateSearch(value) {
+            console.log(value)
+            this.searchValue = value
         },
     },
     mounted() {
@@ -137,7 +134,12 @@ export default {
 </script>
 
 <style lang="scss">
-::-webkit-scrollbar {
+@mixin app-input {
+    border: 1px solid #38ac5a;
+    border-radius: 4px;
+    height: 40px;
+}
+:-webkit-scrollbar {
     width: 0;
 }
 * {
@@ -171,6 +173,20 @@ export default {
     padding: 10px 30px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    .input {
+        @include app-input();
+        padding: 10px;
+    }
+    .select {
+        @include app-input();
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding: 10px 15px;
+        outline: none;
+        color: #3f465175;
+    }
 }
 .post-container {
     grid-column-start: 1;

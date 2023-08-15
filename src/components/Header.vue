@@ -17,7 +17,11 @@
             </ul>
             <div class="header__btns">
                 <form class="header__input-container">
-                    <my-input class="header__input" placeholder="Что хочешь почитать?" />
+                    <my-input
+                        @input="updateValue"
+                        v-model="InputValue"
+                        class="header__input"
+                        placeholder="Что хочешь почитать?" />
                     <span class="icon-search">
                         <img :src="SearchImageSrc" alt="search img" />
                     </span>
@@ -35,14 +39,25 @@
 import myBtn from './UI/myBtn.vue'
 export default {
     components: { myBtn },
+    props: {
+        search: {
+            type: String,
+            default: '',
+        },
+    },
     data() {
         return {
             SearchImageSrc: require('../assets/search_icon.png'),
             PersonImageSrc: require('../assets/person_icon.png'),
             downImg: require('@/assets/arrow_down.png'),
+            InputValue: '',
         }
     },
-    methods: {},
+    methods: {
+        updateValue() {
+            this.$emit('update:search', this.InputValue)
+        },
+    },
     mounted() {
         window.addEventListener('scroll', this.handleScroll)
     },
