@@ -1,5 +1,5 @@
 <template>
-    <div class="post">
+    <div @click="$router.push(`/full/${post.id}`)" class="post">
         <picture>
             <img
                 class="post__image"
@@ -16,19 +16,20 @@
         </div>
         <div class="post__views">
             <img :src="EyeImageSrc" alt="" />
-            <span>1234</span>
+            <span>{{ searchValue }}</span>
         </div>
-        <!-- <div class="post__btns">
+        <div class="post__btns">
             <my-btn @click="$emit('remove', post)" class="post__btn">Удалить</my-btn>
-        </div> -->
+        </div>
     </div>
 </template>
 
 <script>
 export default {
+    inject: ['searchValue'],
     data() {
         return {
-            EyeImageSrc: require('../assets/eye_icon.png'),
+            EyeImageSrc: require('@/assets/eye_icon.png'),
         }
     },
     props: {

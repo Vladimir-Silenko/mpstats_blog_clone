@@ -1,11 +1,7 @@
 <template>
     <div class="cat_page">
+        <breadcrumbs :breadcrumbs="breadcrumbs" />
         <div class="cat_left">
-            <div class="breadcrumbs">
-                <span
-                    ><span><a href="https://blog.mpstats.io/">Главная</a></span></span
-                >
-            </div>
             <img
                 class="cat_img"
                 src="https://blog.mpstats.io/wp-content/uploads/2023/07/business.png"
@@ -28,7 +24,16 @@
 </template>
 
 <script>
-export default {}
+import Breadcrumbs from './UI/Breadcrumbs.vue'
+export default {
+    components: { Breadcrumbs },
+    props: {
+        breadcrumbs: {
+            type: Array,
+            required: true,
+        },
+    },
+}
 </script>
 
 <style lang="scss">
@@ -36,6 +41,7 @@ export default {}
     background: #f0f2f4;
     overflow: hidden;
     display: grid;
+    grid-template-rows: 2fr 7fr;
     grid-template-columns: 1fr 5fr;
     grid-column-start: 1;
     grid-column-end: 5;
@@ -45,8 +51,8 @@ export default {}
     margin-left: 10px;
     .cat_left {
         grid-column: 1;
-        grid-row-start: 1;
-        grid-row-end: 3;
+        grid-row-start: 2;
+        grid-row-end: 8;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -60,8 +66,8 @@ export default {}
         grid-column: 2;
         display: flex;
         flex-direction: column;
-        grid-row-start: 1;
-        grid-row-end: 3;
+        grid-row-start: 2;
+        grid-row-end: 8;
         color: #3f4651;
         h1 {
             display: block;

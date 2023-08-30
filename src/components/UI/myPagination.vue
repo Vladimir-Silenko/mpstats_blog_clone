@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import myBtn from './myBtn.vue'
+import myBtn from '@/components/UI/myBtn.vue'
 export default {
     components: {
         myBtn,

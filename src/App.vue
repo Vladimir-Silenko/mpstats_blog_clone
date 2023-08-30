@@ -2,31 +2,8 @@
     <div class="app">
         <div class="wrapper">
             <Header :search="searchValue" @update:search="updateSearch" />
-            <side-bar></side-bar>
-            <main>
-                <CategoryPage />
-                <div class="post-container">
-                    <div class="app__buttons">
-                        <my-btn @click="openModal">Cоздать пост</my-btn>
-                        <my-select class="select" :options="sortOptions" v-model="selectedOption" />
-                    </div>
-                    <post-list
-                        v-if="!isPostLoading"
-                        :posts="sortedAndSearchedPosts"
-                        @remove="removePost" />
-                    <div v-else-if="isPostLoading">загрузка...</div>
-                    <my-pagination
-                        v-model="currentPage"
-                        :current="currentPage"
-                        :totalPages="totalPages"
-                        @update:current="handlePageChange" />
-                    <my-dialog @click="closeModal" :show="showModal">
-                        <Post-form @close="closeModal" @create="createPost" />
-                    </my-dialog>
-                </div>
-                <most-popular />
-            </main>
-            <div class="sidebar"></div>
+            <side-bar />
+            <router-view :search-value="searchValue"></router-view>
         </div>
         <Footer />
         <button v-bind:class="{ visible: isScrolled }" @click="scrollUp" class="scrollUpBtn hidden">
@@ -36,70 +13,23 @@
 </template>
 
 <script>
-import PostForm from './components/PostForm.vue'
-import PostList from './components/PostList.vue'
-import Header from './components/Header.vue'
-import CategoryPage from './components/CategoryPage.vue'
-import SideBar from './components/SideBar.vue'
-import MostPopular from './components/MostPopular.vue'
-import Footer from './components/Footer.vue'
-import axios from 'axios'
+import Header from '@/components/Header.vue'
+import SideBar from '@/components/SideBar.vue'
+import Footer from '@/components/Footer.vue'
 export default {
     components: {
-        PostForm,
-        PostList,
         Header,
-        CategoryPage,
         SideBar,
-        MostPopular,
         Footer,
     },
     data() {
         return {
             isScrolled: false,
-            modValue: '',
-            showModal: false,
-            body: '',
-            title: '',
-            posts: [],
-            isPostLoading: true,
-            limit: 9,
-            currentPage: 1,
-            totalPages: 0,
-            selectedOption: '',
             searchValue: '',
-            sortOptions: [
-                { title: 'title', name: 'По-названию' },
-                { title: 'body', name: 'По-описанию' },
-            ],
             whiteArrow: require('./assets/arrow_up_icon.png'),
         }
     },
     methods: {
-        createPost(post) {
-            this.posts.push(post)
-        },
-        removePost(post) {
-            this.posts = this.posts.filter((p) => p.id !== post.id)
-        },
-        closeModal() {
-            this.showModal = false
-        },
-        openModal() {
-            this.showModal = true
-        },
-        async fetchPosts() {
-            const response = await axios.get(
-                `https://jsonplaceholder.typicode.com/posts?_limit=${this.limit}&_page=${this.currentPage}`,
-            )
-            this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-            this.posts = response.data
-            response.status === 200 ? (this.isPostLoading = false) : (this.isPostLoading = true)
-        },
-        handlePageChange(newPage) {
-            this.currentPage = newPage
-            this.fetchPosts()
-        },
         scrollUp() {
             window.scrollTo({ top: 0, behavior: 'smooth' })
         },
@@ -112,23 +42,16 @@ export default {
         },
     },
     mounted() {
-        this.fetchPosts()
         window.addEventListener('scroll', this.handleScroll)
     },
     beforeUnmount() {
         window.removeEventListener('scroll', this.handleScroll)
     },
-    computed: {
-        sortedPosts() {
-            return [...this.posts].sort((post1, post2) => {
-                return post1[this.selectedOption]?.localeCompare(post2[this.selectedOption])
-            })
-        },
-        sortedAndSearchedPosts() {
-            return this.sortedPosts.filter((post) =>
-                post.title.toLowerCase().includes(this.searchValue.toLowerCase()),
-            )
-        },
+    computed: {},
+    provide() {
+        return {
+            searchValue: this.searchValue,
+        }
     },
 }
 </script>

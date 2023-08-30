@@ -16,9 +16,9 @@
                 </li>
             </ul>
             <div class="header__btns">
-                <form class="header__input-container">
+                <form @submit.prevent="handleSubmit" class="header__input-container">
                     <my-input
-                        @input="updateValue"
+                        @keyup="handleKeyPress"
                         v-model="InputValue"
                         class="header__input"
                         placeholder="Что хочешь почитать?" />
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import myBtn from './UI/myBtn.vue'
+import myBtn from '@/components/UI/myBtn.vue'
 export default {
     components: { myBtn },
     props: {
@@ -56,6 +56,11 @@ export default {
     methods: {
         updateValue() {
             this.$emit('update:search', this.InputValue)
+        },
+        handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                this.updateValue()
+            }
         },
     },
     mounted() {
